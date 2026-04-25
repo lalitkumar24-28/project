@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | StreamMax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span></a>
+    </header>
+
+    <div class="section-title">🔒 Admin Login 🔒</div>
+
+    <div class="form-container">
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px; font-size: 16px;">Sign In</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{{ url_for('index') }}">Return to Home</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 StreamMax Admin Panel</p>
+    </footer>
+</div>
+
+<div class="custom-cursor"></div>
+<div class="custom-cursor-follower"></div>
+<script>
+    const cursor = document.querySelector('.custom-cursor');
+    const follower = document.querySelector('.custom-cursor-follower');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        }, 50);
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, input');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => follower.classList.add('active'));
+        el.addEventListener('mouseleave', () => follower.classList.remove('active'));
+    });
+</script>
+</body>
+</html>

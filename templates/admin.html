@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | StreamMax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span> (Admin)</a>
+        <div class="nav-actions">
+            <a href="{{ url_for('index') }}" class="btn-secondary">View Site</a>
+            <a href="{{ url_for('logout') }}" class="btn-primary" style="background-color: #d32f2f; color: white; border-color: #b71c1c;">Logout</a>
+        </div>
+    </header>
+
+    <div class="section-title">⚙️ Add New Movie ⚙️</div>
+
+    <div class="form-container">
+        <form action="{{ url_for('add_movie') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Movie Title</label>
+                <input type="text" id="title" name="title" class="form-control" placeholder="e.g., Inception" required>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Release Year</label>
+                <input type="number" id="year" name="year" class="form-control" placeholder="2026" required>
+            </div>
+
+            <div class="form-group">
+                <label for="genre">Genre</label>
+                <input type="text" id="genre" name="genre" class="form-control" placeholder="Action, Sci-Fi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Synopsis / Story</label>
+                <textarea id="description" name="description" class="form-control" placeholder="Brief description of the movie..." rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Movie Poster (Upload from PC)</label>
+                <input type="file" name="poster" class="form-control" accept="image/*">
+                <small style="color: #888;">Or provide a URL below:</small>
+                <input type="url" name="poster_url" class="form-control" placeholder="https://image-url.com/poster.jpg">
+            </div>
+
+            <div class="form-group">
+                <label>Upload Video File (from PC)</label>
+                <input type="file" name="video" class="form-control" accept="video/mp4,video/x-mkv,video/*">
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Select Available Download Qualities:</label>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; background: #f9f9f9; padding: 10px; border: 1px solid #ddd;">
+                    <label><input type="checkbox" name="qualities" value="4K" checked> 4K UHD</label>
+                    <label><input type="checkbox" name="qualities" value="1080p" checked> 1080p HD</label>
+                    <label><input type="checkbox" name="qualities" value="720p" checked> 720p HD</label>
+                    <label><input type="checkbox" name="qualities" value="480p"> 480p SD</label>
+                    <label><input type="checkbox" name="qualities" value="360p"> 360p</label>
+                    <label><input type="checkbox" name="qualities" value="144p"> 144p</label>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <button type="submit" class="btn-primary" style="font-size: 16px; padding: 10px 30px;">Publish Movie</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 StreamMax Admin Panel</p>
+    </footer>
+</div>
+
+<div class="custom-cursor"></div>
+<div class="custom-cursor-follower"></div>
+<script>
+    const cursor = document.querySelector('.custom-cursor');
+    const follower = document.querySelector('.custom-cursor-follower');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        }, 50);
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, input, textarea, label');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => follower.classList.add('active'));
+        el.addEventListener('mouseleave', () => follower.classList.remove('active'));
+    });
+</script>
+</body>
+</html>

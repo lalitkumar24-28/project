@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamMax - 1filmyfly Style Download Movies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span></a>
+        <input type="text" class="search-bar" placeholder="Search movies...">
+        <div class="nav-actions">
+            <a href="{{ url_for('index') }}" class="btn-primary">Home</a>
+            <a href="{{ url_for('admin') }}" class="btn-secondary">Admin</a>
+        </div>
+    </header>
+
+    <div class="section-title">🔥🔥 Latest Updates 🔥🔥</div>
+    
+    <div class="movie-list">
+        {% for movie in movies %}
+        <div class="movie-item" onclick="location.href='{{ url_for('movie_detail', id=movie.id) }}'" style="cursor: pointer;">
+            <img src="{{ url_for('static', filename=movie.poster_url) if movie.poster_url and not movie.poster_url.startswith('http') else movie.poster_url or 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=100&auto=format&fit=crop' }}" alt="Poster" class="movie-item-poster">
+            <div class="movie-item-info">
+                <a href="{{ url_for('movie_detail', id=movie.id) }}" class="movie-item-title">{{ movie.title }} ({{ movie.release_year }}) HD Download</a>
+                <div class="movie-item-meta">
+                    <span>{{ movie.genre }}</span>
+                    {% set qualities = movie.get_qualities_list() %}
+                    {% if qualities %}
+                    <span class="quality-badge">{{ qualities[0] }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div style="padding: 20px; text-align: center;">No movies added yet.</div>
+        {% endfor %}
+        
+        <!-- Dummy Items to simulate the list -->
+        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+            <div class="movie-item-info">
+                <a href="#" class="movie-item-title">Blade Runner (2049) Hindi Dubbed HD</a>
+                <div class="movie-item-meta"><span>Sci-Fi</span> <span class="quality-badge">1080p</span></div>
+            </div>
+        </div>
+        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+            <div class="movie-item-info">
+                <a href="#" class="movie-item-title">Mad Max (2015) Hindi + English Dual Audio</a>
+                <div class="movie-item-meta"><span>Action</span> <span class="quality-badge">4K</span></div>
+            </div>
+        </div>
+        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+            <div class="movie-item-info">
+                <a href="#" class="movie-item-title">John Wick (2014) Hollywood Movie HD ESub</a>
+                <div class="movie-item-meta"><span>Action</span> <span class="quality-badge">720p</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">📂 Select Category 📂</div>
+    <ul class="category-list">
+        <li><a href="#">New South Hindi Dubbed Movies</a></li>
+        <li><a href="#">Web Series</a></li>
+        <li><a href="#">New Bollywood Movies</a></li>
+        <li><a href="#">Animation Movies</a></li>
+        <li><a href="#">Hollywood Hindi Movies</a></li>
+        <li><a href="#">Marvel Hollywood Movies</a></li>
+    </ul>
+
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="#" class="btn-primary" style="width: 80%;">How To Download Movies!</a>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Contact Us</a>
+            <a href="#">DMCA</a>
+        </div>
+        <p>Powered By: StreamMax</p>
+        <p>&copy; 2026 All Rights Reserved.</p>
+    </footer>
+</div>
+
+<div class="custom-cursor"></div>
+<div class="custom-cursor-follower"></div>
+<script>
+    const cursor = document.querySelector('.custom-cursor');
+    const follower = document.querySelector('.custom-cursor-follower');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        }, 50);
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, .movie-item, input');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => follower.classList.add('active'));
+        el.addEventListener('mouseleave', () => follower.classList.remove('active'));
+    });
+</script>
+</body>
+</html>

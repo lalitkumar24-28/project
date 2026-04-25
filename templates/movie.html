@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} ({{ movie.release_year }}) - Download | StreamMax</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <header>
+        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span></a>
+        <div class="nav-actions">
+            <a href="{{ url_for('index') }}" class="btn-primary">Home</a>
+            <a href="{{ url_for('admin') }}" class="btn-secondary">Admin</a>
+        </div>
+    </header>
+
+    <div class="section-title">🎬 {{ movie.title }} ({{ movie.release_year }}) 🎬</div>
+
+    <div class="movie-details-container">
+        <img src="{{ url_for('static', filename=movie.poster_url) if movie.poster_url and not movie.poster_url.startswith('http') else movie.poster_url or 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=300&auto=format&fit=crop' }}" alt="{{ movie.title }} Poster" class="detail-poster">
+        
+        <h1 class="detail-title">{{ movie.title }}</h1>
+        
+        <div class="detail-meta">
+            <strong>Release Year:</strong> {{ movie.release_year }}<br>
+            <strong>Genre:</strong> {{ movie.genre }}<br>
+            <strong>Format:</strong> MKV / MP4<br>
+            <strong>Language:</strong> Hindi + English (Dual Audio)
+        </div>
+
+        <div class="detail-synopsis">
+            <strong>Story:</strong><br>
+            {{ movie.description }}
+        </div>
+
+        <div class="section-title">⬇️ Download Links ⬇️</div>
+
+        <div class="download-links">
+            {% set qualities = movie.get_qualities_list() %}
+            
+            {% if '4K' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 4K UHD</span>
+                <span class="download-size">12.4 GB</span>
+            </a>
+            {% endif %}
+
+            {% if '1080p' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 1080p HD</span>
+                <span class="download-size">3.2 GB</span>
+            </a>
+            {% endif %}
+
+            {% if '720p' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 720p HD</span>
+                <span class="download-size">1.5 GB</span>
+            </a>
+            {% endif %}
+
+            {% if '480p' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 480p</span>
+                <span class="download-size">800 MB</span>
+            </a>
+            {% endif %}
+
+            {% if '360p' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 360p</span>
+                <span class="download-size">400 MB</span>
+            </a>
+            {% endif %}
+
+            {% if '144p' in qualities %}
+            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                <span>Download in 144p</span>
+                <span class="download-size">150 MB</span>
+            </a>
+            {% endif %}
+
+            {% if not qualities %}
+            <div style="text-align: center; color: red; font-weight: bold;">No downloads available for this movie.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Contact Us</a>
+            <a href="#">DMCA</a>
+        </div>
+        <p>Powered By: StreamMax</p>
+        <p>&copy; 2026 All Rights Reserved.</p>
+    </footer>
+</div>
+
+<div class="custom-cursor"></div>
+<div class="custom-cursor-follower"></div>
+<script>
+    const cursor = document.querySelector('.custom-cursor');
+    const follower = document.querySelector('.custom-cursor-follower');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        setTimeout(() => {
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        }, 50);
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, .download-btn, input');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => follower.classList.add('active'));
+        el.addEventListener('mouseleave', () => follower.classList.remove('active'));
+    });
+</script>
+</body>
+</html>
