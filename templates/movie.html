@@ -4,89 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ movie.title }} ({{ movie.release_year }}) - Download | StreamMax</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
 </head>
 <body>
 
 <div class="layout-wrapper">
     <header>
-        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span></a>
+        <a href="{{ url_for('index') }}" class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#0b1812" stroke="#98ca3f" stroke-width="6"/>
+                <path d="M38 32 L18 50 L38 68" stroke="#98ca3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M62 32 L82 50 L62 68" stroke="#00ffd2" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="logo">Stream<span>Max</span></span>
+        </a>
         <div class="nav-actions">
             <a href="{{ url_for('index') }}" class="btn-primary">Home</a>
             <a href="{{ url_for('admin') }}" class="btn-secondary">Admin</a>
         </div>
     </header>
 
-    <div class="section-title">🎬 {{ movie.title }} ({{ movie.release_year }}) 🎬</div>
+    <div class="section-title">🎬 Movie Details 🎬</div>
 
     <div class="movie-details-container">
         <img src="{{ url_for('static', filename=movie.poster_url) if movie.poster_url and not movie.poster_url.startswith('http') else movie.poster_url or 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=300&auto=format&fit=crop' }}" alt="{{ movie.title }} Poster" class="detail-poster">
         
-        <h1 class="detail-title">{{ movie.title }}</h1>
-        
-        <div class="detail-meta">
-            <strong>Release Year:</strong> {{ movie.release_year }}<br>
-            <strong>Genre:</strong> {{ movie.genre }}<br>
-            <strong>Format:</strong> MKV / MP4<br>
-            <strong>Language:</strong> Hindi + English (Dual Audio)
-        </div>
-
-        <div class="detail-synopsis">
-            <strong>Story:</strong><br>
-            {{ movie.description }}
-        </div>
-
-        <div class="section-title">⬇️ Download Links ⬇️</div>
-
-        <div class="download-links">
-            {% set qualities = movie.get_qualities_list() %}
+        <div class="detail-info-pane">
+            <h1 class="detail-title">{{ movie.title }} ({{ movie.release_year }})</h1>
             
-            {% if '4K' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 4K UHD</span>
-                <span class="download-size">12.4 GB</span>
-            </a>
-            {% endif %}
+            <div class="detail-meta">
+                <div>
+                    <strong>Release Year</strong>
+                    <span>{{ movie.release_year }}</span>
+                </div>
+                <div>
+                    <strong>Genre</strong>
+                    <span>{{ movie.genre }}</span>
+                </div>
+                <div>
+                    <strong>Format</strong>
+                    <span>MKV / MP4 (High Definition)</span>
+                </div>
+                <div>
+                    <strong>Audio Tracks</strong>
+                    <span>Hindi + English (Dual Audio)</span>
+                </div>
+            </div>
 
-            {% if '1080p' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 1080p HD</span>
-                <span class="download-size">3.2 GB</span>
-            </a>
-            {% endif %}
+            <div class="detail-synopsis">
+                <strong>Storyline / Synopsis</strong>
+                <p>{{ movie.description or 'No storyline has been provided for this movie yet.' }}</p>
+            </div>
 
-            {% if '720p' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 720p HD</span>
-                <span class="download-size">1.5 GB</span>
-            </a>
-            {% endif %}
+            <div class="section-title" style="margin: 20px 0 10px; font-size: 1.2rem; text-align: left; letter-spacing: 1px;">⬇️ Download Mirrors ⬇️</div>
 
-            {% if '480p' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 480p</span>
-                <span class="download-size">800 MB</span>
-            </a>
-            {% endif %}
+            <div class="download-links">
+                {% set qualities = movie.get_qualities_list() %}
+                
+                {% if '4K' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 4K UHD</span>
+                    <span class="download-size">12.4 GB</span>
+                </a>
+                {% endif %}
 
-            {% if '360p' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 360p</span>
-                <span class="download-size">400 MB</span>
-            </a>
-            {% endif %}
+                {% if '1080p' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 1080p HD</span>
+                    <span class="download-size">3.2 GB</span>
+                </a>
+                {% endif %}
 
-            {% if '144p' in qualities %}
-            <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
-                <span>Download in 144p</span>
-                <span class="download-size">150 MB</span>
-            </a>
-            {% endif %}
+                {% if '720p' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 720p HD</span>
+                    <span class="download-size">1.5 GB</span>
+                </a>
+                {% endif %}
 
-            {% if not qualities %}
-            <div style="text-align: center; color: red; font-weight: bold;">No downloads available for this movie.</div>
-            {% endif %}
+                {% if '480p' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 480p SD</span>
+                    <span class="download-size">800 MB</span>
+                </a>
+                {% endif %}
+
+                {% if '360p' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 360p</span>
+                    <span class="download-size">400 MB</span>
+                </a>
+                {% endif %}
+
+                {% if '144p' in qualities %}
+                <a href="{{ url_for('static', filename=movie.video_path) if movie.video_path else '#' }}" class="download-btn" {% if movie.video_path %}download="{{ movie.title }}.{{ movie.video_path.split('.')[-1] }}"{% else %}onclick="alert('File not found!')"{% endif %}>
+                    <span>Download in 144p</span>
+                    <span class="download-size">150 MB</span>
+                </a>
+                {% endif %}
+
+                {% if not qualities %}
+                <div style="grid-column: 1 / -1; text-align: center; color: #ff0055; font-weight: bold; padding: 20px; background: rgba(255, 0, 85, 0.05); border: 1px solid rgba(255, 0, 85, 0.2); border-radius: 12px;">No downloads available for this movie.</div>
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -103,7 +124,9 @@
 
 <div class="custom-cursor"></div>
 <div class="custom-cursor-follower"></div>
+
 <script>
+    // Custom Cursor Logic
     const cursor = document.querySelector('.custom-cursor');
     const follower = document.querySelector('.custom-cursor-follower');
     
@@ -116,7 +139,7 @@
         }, 50);
     });
 
-    const hoverElements = document.querySelectorAll('a, button, .download-btn, input');
+    const hoverElements = document.querySelectorAll('a, button, .download-btn');
     hoverElements.forEach(el => {
         el.addEventListener('mouseenter', () => follower.classList.add('active'));
         el.addEventListener('mouseleave', () => follower.classList.remove('active'));

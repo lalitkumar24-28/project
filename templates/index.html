@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamMax - 1filmyfly Style Download Movies</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <title>StreamMax - High-End Movie Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v={{ range(1, 1000) | random }}">
 </head>
 <body>
 
 <div class="layout-wrapper">
     <header>
-        <a href="{{ url_for('index') }}" class="logo">Stream<span>Max</span></a>
-        <input type="text" class="search-bar" placeholder="Search movies...">
+        <a href="{{ url_for('index') }}" class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="22" fill="#0b1812" stroke="#98ca3f" stroke-width="6"/>
+                <path d="M38 32 L18 50 L38 68" stroke="#98ca3f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M62 32 L82 50 L62 68" stroke="#00ffd2" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="logo">Stream<span>Max</span></span>
+        </a>
+        <input type="text" class="search-bar" id="movieSearch" placeholder="Search movies...">
         <div class="nav-actions">
             <a href="{{ url_for('index') }}" class="btn-primary">Home</a>
             <a href="{{ url_for('admin') }}" class="btn-secondary">Admin</a>
@@ -21,12 +28,12 @@
 
     <div class="section-title">🔥🔥 Latest Updates 🔥🔥</div>
     
-    <div class="movie-list">
+    <div class="movie-list" id="movieList">
         {% for movie in movies %}
-        <div class="movie-item" onclick="location.href='{{ url_for('movie_detail', id=movie.id) }}'" style="cursor: pointer;">
-            <img src="{{ url_for('static', filename=movie.poster_url) if movie.poster_url and not movie.poster_url.startswith('http') else movie.poster_url or 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=100&auto=format&fit=crop' }}" alt="Poster" class="movie-item-poster">
+        <div class="movie-item" onclick="location.href='{{ url_for('movie_detail', id=movie.id) }}'">
+            <img src="{{ url_for('static', filename=movie.poster_url) if movie.poster_url and not movie.poster_url.startswith('http') else movie.poster_url or 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=300&auto=format&fit=crop' }}" alt="Poster" class="movie-item-poster">
             <div class="movie-item-info">
-                <a href="{{ url_for('movie_detail', id=movie.id) }}" class="movie-item-title">{{ movie.title }} ({{ movie.release_year }}) HD Download</a>
+                <a href="{{ url_for('movie_detail', id=movie.id) }}" class="movie-item-title">{{ movie.title }} ({{ movie.release_year }})</a>
                 <div class="movie-item-meta">
                     <span>{{ movie.genre }}</span>
                     {% set qualities = movie.get_qualities_list() %}
@@ -37,29 +44,38 @@
             </div>
         </div>
         {% else %}
-        <div style="padding: 20px; text-align: center;">No movies added yet.</div>
+        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-muted);">No movies added yet.</div>
         {% endfor %}
         
         <!-- Dummy Items to simulate the list -->
-        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
-            <img src="https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+        <div class="movie-item" onclick="location.href='#'">
+            <img src="https://images.unsplash.com/photo-1509281373149-e957c6296406?q=80&w=300&auto=format&fit=crop" class="movie-item-poster">
             <div class="movie-item-info">
                 <a href="#" class="movie-item-title">Blade Runner (2049) Hindi Dubbed HD</a>
-                <div class="movie-item-meta"><span>Sci-Fi</span> <span class="quality-badge">1080p</span></div>
+                <div class="movie-item-meta">
+                    <span>Sci-Fi</span>
+                    <span class="quality-badge">1080p</span>
+                </div>
             </div>
         </div>
-        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
-            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+        <div class="movie-item" onclick="location.href='#'">
+            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=300&auto=format&fit=crop" class="movie-item-poster">
             <div class="movie-item-info">
-                <a href="#" class="movie-item-title">Mad Max (2015) Hindi + English Dual Audio</a>
-                <div class="movie-item-meta"><span>Action</span> <span class="quality-badge">4K</span></div>
+                <a href="#" class="movie-item-title">Mad Max: Fury Road (2015) Dual Audio</a>
+                <div class="movie-item-meta">
+                    <span>Action</span>
+                    <span class="quality-badge">4K</span>
+                </div>
             </div>
         </div>
-        <div class="movie-item" onclick="location.href='#'" style="cursor: pointer;">
-            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=100&auto=format&fit=crop" class="movie-item-poster">
+        <div class="movie-item" onclick="location.href='#'">
+            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=300&auto=format&fit=crop" class="movie-item-poster">
             <div class="movie-item-info">
-                <a href="#" class="movie-item-title">John Wick (2014) Hollywood Movie HD ESub</a>
-                <div class="movie-item-meta"><span>Action</span> <span class="quality-badge">720p</span></div>
+                <a href="#" class="movie-item-title">John Wick (2014) Hollywood HD ESub</a>
+                <div class="movie-item-meta">
+                    <span>Action</span>
+                    <span class="quality-badge">720p</span>
+                </div>
             </div>
         </div>
     </div>
@@ -74,8 +90,8 @@
         <li><a href="#">Marvel Hollywood Movies</a></li>
     </ul>
 
-    <div style="text-align: center; margin: 20px 0;">
-        <a href="#" class="btn-primary" style="width: 80%;">How To Download Movies!</a>
+    <div style="text-align: center; margin: 30px 20px;">
+        <a href="#" class="btn-primary" style="width: 100%; max-width: 500px; padding: 14px 30px;">How To Download Movies!</a>
     </div>
 
     <footer>
@@ -91,23 +107,60 @@
 
 <div class="custom-cursor"></div>
 <div class="custom-cursor-follower"></div>
+
 <script>
+    // Custom Cursor Logic
     const cursor = document.querySelector('.custom-cursor');
     const follower = document.querySelector('.custom-cursor-follower');
     
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
+        // Smooth cursor follower animation using translate and small delay
         setTimeout(() => {
             follower.style.left = e.clientX + 'px';
             follower.style.top = e.clientY + 'px';
         }, 50);
     });
 
-    const hoverElements = document.querySelectorAll('a, button, .movie-item, input');
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => follower.classList.add('active'));
-        el.addEventListener('mouseleave', () => follower.classList.remove('active'));
+    // Cursor activation classes on hover
+    function updateHoverListeners() {
+        const hoverElements = document.querySelectorAll('a, button, .movie-item, input, .btn-primary, .btn-secondary');
+        hoverElements.forEach(el => {
+            // Remove first to avoid duplicate events
+            el.removeEventListener('mouseenter', addActiveCursor);
+            el.removeEventListener('mouseleave', removeActiveCursor);
+            
+            el.addEventListener('mouseenter', addActiveCursor);
+            el.addEventListener('mouseleave', removeActiveCursor);
+        });
+    }
+
+    function addActiveCursor() {
+        follower.classList.add('active');
+    }
+
+    function removeActiveCursor() {
+        follower.classList.remove('active');
+    }
+
+    updateHoverListeners();
+
+    // Client-side quick search logic
+    const searchInput = document.getElementById('movieSearch');
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const items = document.querySelectorAll('#movieList .movie-item');
+        
+        items.forEach(item => {
+            const title = item.querySelector('.movie-item-title').textContent.toLowerCase();
+            const genre = item.querySelector('.movie-item-meta span').textContent.toLowerCase();
+            if (title.includes(query) || genre.includes(query)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     });
 </script>
 </body>

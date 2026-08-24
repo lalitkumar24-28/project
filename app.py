@@ -71,8 +71,8 @@ def logout():
 def admin():
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
-    movies_count = Movie.query.count()
-    return render_template('admin.html', movies_count=movies_count)
+    movies = Movie.query.order_by(Movie.created_at.desc()).all()
+    return render_template('admin.html', movies=movies)
 
 @app.route('/admin/add-movie', methods=['POST'])
 def add_movie():
@@ -119,6 +119,36 @@ def add_movie():
         video_path=video_path
     )
     db.session.add(new_movie)
+    db.session.commit()
+    
+    return redirect(url_for('admin'))
+
+@app.route('/admin/delete-movie/<int:id>', methods=['POST'])
+def delete_movie(id):
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('login'))
+    
+    movie = Movie.query.get_or_404(id)
+    
+    # Delete video file if exists
+    if movie.video_path:
+        video_file_path = os.path.join(app.root_path, 'static', movie.video_path)
+        if os.path.exists(video_file_path):
+            try:
+                os.remove(video_file_path)
+            except Exception as e:
+                print(f"Error deleting video: {e}")
+                
+    # Delete poster file if exists and is uploaded locally
+    if movie.poster_url and movie.poster_url.startswith('uploads/posters/'):
+        poster_file_path = os.path.join(app.root_path, 'static', movie.poster_url)
+        if os.path.exists(poster_file_path):
+            try:
+                os.remove(poster_file_path)
+            except Exception as e:
+                print(f"Error deleting poster: {e}")
+                
+    db.session.delete(movie)
     db.session.commit()
     
     return redirect(url_for('admin'))
