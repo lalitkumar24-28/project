@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super-secret-streammax-key-2026'
 app.config['UPLOAD_FOLDER'] = 'static/uploads/videos'
 app.config['POSTER_FOLDER'] = 'static/uploads/posters'
-app.config['MAX_CONTENT_LENGTH'] = 2000 * 1024 * 1024 # 2GB limit
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024 # 500MB limit
 
 ADMIN_USERNAME = 'admin'
 ADMIN_PASSWORD = 'password123'
